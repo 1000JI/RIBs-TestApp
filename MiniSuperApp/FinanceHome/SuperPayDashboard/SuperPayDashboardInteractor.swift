@@ -20,23 +20,31 @@ protocol SuperPayDashboardListener: AnyObject {
     // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
 }
 
-final class SuperPayDashboardInteractor: PresentableInteractor<SuperPayDashboardPresentable>, SuperPayDashboardInteractable, SuperPayDashboardPresentableListener {
+/// 디펜던시를 프로토콜로 묶어서 관리하게 되면 고쳐야 할 부분이 줄어들게 됨
+protocol SuperPayDashboardInteractorDependency {
+    var balance: ReadOnlyCurrentValuePublisher<Double> { get }
+}
 
+final class SuperPayDashboardInteractor: PresentableInteractor<SuperPayDashboardPresentable>, SuperPayDashboardInteractable, SuperPayDashboardPresentableListener {
+    
     weak var router: SuperPayDashboardRouting?
     weak var listener: SuperPayDashboardListener?
-
-    // TODO: Add additional dependencies to constructor. Do not perform any logic
-    // in constructor.
-    override init(presenter: SuperPayDashboardPresentable) {
+    
+    private let dependency: SuperPayDashboardInteractorDependency
+    init(
+        presenter: SuperPayDashboardPresentable,
+        dependency: SuperPayDashboardInteractorDependency
+    ) {
+        self.dependency = dependency
         super.init(presenter: presenter)
         presenter.listener = self
     }
-
+    
     override func didBecomeActive() {
         super.didBecomeActive()
         // TODO: Implement business logic here.
     }
-
+    
     override func willResignActive() {
         super.willResignActive()
         // TODO: Pause any business logic.
