@@ -50,7 +50,8 @@ final class FinanceHomeBuilder: Builder<FinanceHomeDependency>, FinanceHomeBuild
         return FinanceHomeRouter(
             interactor: interactor,
             viewController: viewController,
-            superPayDashboardBuildable: superPayDashboardBuilder
+            superPayDashboardBuildable: superPayDashboardBuilder,
+            cardOnFileDashboardBuildable: cardOnFileDashboardBuilder
         )
     }
 }
