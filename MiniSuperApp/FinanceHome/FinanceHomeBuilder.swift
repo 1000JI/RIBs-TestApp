@@ -33,6 +33,7 @@ final class FinanceHomeBuilder: Builder<FinanceHomeDependency>, FinanceHomeBuild
     
     func build(withListener listener: FinanceHomeListener) -> FinanceHomeRouting {
         let balancePublisher = CurrentValuePublisher<Double>(0)
+        
         // 리블렛이 필요한 객체들을 담는 바구니의 개념 && 자식 리블렛이 필요한 것들도 담는 바구니
         let component = FinanceHomeComponent(
             dependency: dependency,

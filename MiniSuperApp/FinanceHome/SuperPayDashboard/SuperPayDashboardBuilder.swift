@@ -6,6 +6,7 @@
 //
 
 import ModernRIBs
+import Foundation
 
 protocol SuperPayDashboardDependency: Dependency {
     /// 부모로 부터 받을 의존성을 기입 하게 됨(슈퍼페이대시보드는 뷰의 역할이 좀 더크므로 부모로 부터 받는 것이 좋아보임)
@@ -13,6 +14,7 @@ protocol SuperPayDashboardDependency: Dependency {
 }
 
 final class SuperPayDashboardComponent: Component<SuperPayDashboardDependency>, SuperPayDashboardInteractorDependency {
+    var balanceFormatter: NumberFormatter { Formatter.balanceFormatter }
     var balance: ReadOnlyCurrentValuePublisher<Double> { dependency.balance }
 }
 
