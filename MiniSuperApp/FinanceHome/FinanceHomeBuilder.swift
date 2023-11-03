@@ -6,7 +6,7 @@ protocol FinanceHomeDependency: Dependency {
 }
 
 final class FinanceHomeComponent: Component<FinanceHomeDependency>, SuperPayDashboardDependency, CardOnFileDashboardDependency, AddPaymentMethodDependency {
-    let cardsOnFileRepository: CardOnFileRepository
+    let cardOnFileRepository: CardOnFileRepository
     var balance: ReadOnlyCurrentValuePublisher<Double> { balancePublisher }
     private let balancePublisher: CurrentValuePublisher<Double>
     
@@ -17,7 +17,7 @@ final class FinanceHomeComponent: Component<FinanceHomeDependency>, SuperPayDash
         cardOnFileRepository: CardOnFileRepository
     ) {
         self.balancePublisher = balance
-        self.cardsOnFileRepository = cardOnFileRepository
+        self.cardOnFileRepository = cardOnFileRepository
         super.init(dependency: dependency)
     }
 }
