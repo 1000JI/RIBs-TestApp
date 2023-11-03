@@ -6,15 +6,18 @@ protocol FinanceHomeDependency: Dependency {
 }
 
 final class FinanceHomeComponent: Component<FinanceHomeDependency>, SuperPayDashboardDependency, CardOnFileDashboardDependency {
+    let cardsOnFileRepository: CardOnFileRepository
     var balance: ReadOnlyCurrentValuePublisher<Double> { balancePublisher }
     private let balancePublisher: CurrentValuePublisher<Double>
     
     /// 자식 리블렛의 디펜던시를 충족시켜줘야 함
     init(
         dependency: FinanceHomeDependency,
-        balance: CurrentValuePublisher<Double>
+        balance: CurrentValuePublisher<Double>,
+        cardOnFileRepository: CardOnFileRepository
     ) {
         self.balancePublisher = balance
+        self.cardsOnFileRepository = cardOnFileRepository
         super.init(dependency: dependency)
     }
 }
@@ -37,7 +40,8 @@ final class FinanceHomeBuilder: Builder<FinanceHomeDependency>, FinanceHomeBuild
         // 리블렛이 필요한 객체들을 담는 바구니의 개념 && 자식 리블렛이 필요한 것들도 담는 바구니
         let component = FinanceHomeComponent(
             dependency: dependency,
-            balance: balancePublisher
+            balance: balancePublisher,
+            cardOnFileRepository: CardOnFileRepositoryImp()
         )
         let viewController = FinanceHomeViewController()
         let interactor = FinanceHomeInteractor(presenter: viewController)
