@@ -3,6 +3,8 @@ import ModernRIBs
 protocol FinanceHomeRouting: ViewableRouting {
     func attachSuperPayDashboard()
     func attachCardOnFileDashboard()
+    func attachAddPaymentMethod()
+    func detachAddPamyentMethod()
 }
 
 protocol FinanceHomePresentable: Presentable {
@@ -14,16 +16,18 @@ protocol FinanceHomeListener: AnyObject {
     // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
 }
 
-final class FinanceHomeInteractor: PresentableInteractor<FinanceHomePresentable>, FinanceHomeInteractable, FinanceHomePresentableListener {
+final class FinanceHomeInteractor: PresentableInteractor<FinanceHomePresentable>, FinanceHomeInteractable, FinanceHomePresentableListener, AdaptivePresentationControllerDelegate {
     
     weak var router: FinanceHomeRouting?
     weak var listener: FinanceHomeListener?
     
-    // TODO: Add additional dependencies to constructor. Do not perform any logic
-    // in constructor.
+    let presentationDelegateProxy: AdaptivePresentationControllerDelegateProxy
+    
     override init(presenter: FinanceHomePresentable) {
+        self.presentationDelegateProxy = AdaptivePresentationControllerDelegateProxy()
         super.init(presenter: presenter)
         presenter.listener = self
+        self.presentationDelegateProxy.delegate = self
     }
     
     override func didBecomeActive() {
@@ -36,5 +40,22 @@ final class FinanceHomeInteractor: PresentableInteractor<FinanceHomePresentable>
     override func willResignActive() {
         super.willResignActive()
         // TODO: Pause any business logic.
+    }
+    
+    func presentationControllerDidDismiss() {
+        router?.detachAddPamyentMethod()
+    }
+    
+    // MARK: - CardOnFileDashboardListener
+    
+    func cardOnFileDashboardDidTapAddPaymentMethod() {
+        // 라우터에게 AddPayment 메소드를 붙여줘라고 전달함
+        router?.attachAddPaymentMethod()
+    }
+    
+    // MARK: - AddPaymentMethodListener
+    
+    func addPaymentMethodDidTapClose() {
+        router?.detachAddPamyentMethod()
     }
 }

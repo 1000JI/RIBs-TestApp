@@ -19,7 +19,7 @@ protocol CardOnFileDashboardPresentable: Presentable {
 }
 
 protocol CardOnFileDashboardListener: AnyObject {
-    // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
+    func cardOnFileDashboardDidTapAddPaymentMethod()
 }
 
 protocol CardOnFileDashboardInteractorDependency {
@@ -29,6 +29,7 @@ protocol CardOnFileDashboardInteractorDependency {
 final class CardOnFileDashboardInteractor: PresentableInteractor<CardOnFileDashboardPresentable>, CardOnFileDashboardInteractable, CardOnFileDashboardPresentableListener {
 
     weak var router: CardOnFileDashboardRouting?
+    /// 부모 리블렛의 Interactor
     weak var listener: CardOnFileDashboardListener?
 
     private let dependency: CardOnFileDashboardInteractorDependency
@@ -61,5 +62,10 @@ final class CardOnFileDashboardInteractor: PresentableInteractor<CardOnFileDashb
         
         cancellables.forEach { $0.cancel() }
         cancellables.removeAll()
+    }
+    
+    func didTapAddPaymentMethod() {
+        //파이낸스홈에게 알려주는 것이 더 좋아보임(카드온파일은 일부만 담당하고 있기 때문에!)
+        listener?.cardOnFileDashboardDidTapAddPaymentMethod()
     }
 }

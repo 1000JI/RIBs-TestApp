@@ -1,9 +1,10 @@
 import ModernRIBs
 
 /// listener에 등록하기 위해서 SuperPayDashboardListener를 상속 받도록 함
-protocol FinanceHomeInteractable: Interactable, SuperPayDashboardListener, CardOnFileDashboardListener {
+protocol FinanceHomeInteractable: Interactable, SuperPayDashboardListener, CardOnFileDashboardListener, AddPaymentMethodListener {
     var router: FinanceHomeRouting? { get set }
     var listener: FinanceHomeListener? { get set }
+    var presentationDelegateProxy: AdaptivePresentationControllerDelegateProxy { get }
 }
 
 protocol FinanceHomeViewControllable: ViewControllable {
@@ -19,15 +20,20 @@ final class FinanceHomeRouter: ViewableRouter<FinanceHomeInteractable, FinanceHo
     private var cardOnFileRouting: Routing?
     private let cardOnFileDashboardBuildable: CardOnFileDashboardBuildable
     
+    private var addPaymentMethodRouting: Routing?
+    private var addPaymentMethodBuildable: AddPaymentMethodBuildable
+    
     // 자식 빌더를 프로퍼티로 추가 후 생성자에도 추가를 해줌
     init(
         interactor: FinanceHomeInteractable,
         viewController: FinanceHomeViewControllable,
         superPayDashboardBuildable: SuperPayDashboardBuildable,
-        cardOnFileDashboardBuildable: CardOnFileDashboardBuildable
+        cardOnFileDashboardBuildable: CardOnFileDashboardBuildable,
+        addPaymentMethodBuildable: AddPaymentMethodBuildable
     ) {
         self.superPayDashboardBuildable = superPayDashboardBuildable
         self.cardOnFileDashboardBuildable = cardOnFileDashboardBuildable
+        self.addPaymentMethodBuildable = addPaymentMethodBuildable
         super.init(interactor: interactor, viewController: viewController)
         interactor.router = self
     }
@@ -60,6 +66,38 @@ final class FinanceHomeRouter: ViewableRouter<FinanceHomeInteractable, FinanceHo
         
         self.superPayRouting = router
         attachChild(router)
+    }
+    
+    func attachAddPaymentMethod() {
+        // 모달로 띄울 경우 제스처로 닫을 수 있음.
+        // 따라서 addPaymentMethodRouting 값이 nil이 아니라 추가가 안되는 문제가 발생 할 수 있음
+        // 뷰컨을 띄웠던 부모가 자식을 무조건 책임지고 닫아야함
+        // 그래서 어태치와 디테치가 같이 있다보니 관리가 편해지고 어디서든 사용 할 수 있게됨(재사용성)
+        // 뷰컨이 자신을 Dismiss하는 코드를 자기 자신 안에서 부를 때가 있는데 그렇게 되면 그 뷰컨은 재사용하기가 어려움
+        // 왜냐하면 뷰컨을 쓰는 부모의 입장에서는 이 뷰컨의 라이프 사이클을 전적으로 관리할 수 없게 되기 때문..
+        if addPaymentMethodRouting != nil {
+            return
+        }
+        
+        let router = addPaymentMethodBuildable.build(withListener: interactor)
+        let navigation = NavigationControllerable(root: router.viewControllable)
+        navigation.navigationController.presentationController?.delegate = interactor.presentationDelegateProxy
+        // viewControllable에서 프레젠트 하는 로직은 거의 모든 곳에서 사용되기 때문에 유틸 만듬!
+        viewControllable.present(navigation, animated: true, completion: nil)
+        
+        addPaymentMethodRouting = router
+        attachChild(router)
+    }
+    
+    func detachAddPamyentMethod() {
+        guard let router = addPaymentMethodRouting else {
+            return
+        }
+        
+        viewControllable.dismiss(completion: nil)
+        
+        detachChild(router)
+        addPaymentMethodRouting = nil
     }
     
 }
