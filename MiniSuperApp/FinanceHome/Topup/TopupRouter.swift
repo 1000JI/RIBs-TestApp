@@ -7,7 +7,7 @@
 
 import ModernRIBs
 
-protocol TopupInteractable: Interactable, AddPaymentMethodListener {
+protocol TopupInteractable: Interactable, AddPaymentMethodListener, EnterAmountListener {
     var router: TopupRouting? { get set }
     var listener: TopupListener? { get set }
     var presentationDelegateProxy: AdaptivePresentationControllerDelegateProxy { get }
@@ -27,13 +27,18 @@ final class TopupRouter: Router<TopupInteractable>, TopupRouting {
     private let addPaymentMethodBuildable: AddPaymentMethodBuildable
     private var addPaymentMethodRouting: Routing?
     
+    private let enterAmountBuildable: EnterAmountBuildable
+    private var enterAmountRouting: Routing?
+    
     init(
         interactor: TopupInteractable,
         viewController: ViewControllable,
-        addPaymentMethodBuildable: AddPaymentMethodBuildable
+        addPaymentMethodBuildable: AddPaymentMethodBuildable,
+        enterAmountBuildable: EnterAmountBuildable
     ) {
         self.viewController = viewController
         self.addPaymentMethodBuildable = addPaymentMethodBuildable
+        self.enterAmountBuildable = enterAmountBuildable
         super.init(interactor: interactor)
         interactor.router = self
     }
@@ -79,6 +84,27 @@ final class TopupRouter: Router<TopupInteractable>, TopupRouting {
         
         viewController.dismiss(completion: nil)
         self.navigationControllerable = nil
+    }
+    
+    func attachEnterAmount() {
+        if enterAmountRouting != nil {
+            return
+        }
+        
+        let router = enterAmountBuildable.build(withListener: interactor)
+        presentInsideNavigation(router.viewControllable)
+        attachChild(router)
+        self.enterAmountRouting = router
+    }
+    
+    func detachEnterAmount() {
+        guard let router = enterAmountRouting else {
+            return
+        }
+        
+        dismissPresentedNavigation(completion: nil)
+        detachChild(router)
+        self.enterAmountRouting = nil
     }
 
     // MARK: - Private
