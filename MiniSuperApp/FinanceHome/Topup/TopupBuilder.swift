@@ -12,16 +12,12 @@ import ModernRIBs
 protocol TopupDependency: Dependency {
     /// Topup 리블렛이 소유하고 있는 뷰가 아니라 Topup 리블렛을 띄운 부모가 지정해준 뷰
     var topupBaseViewController: ViewControllable { get }
+    var cardOnFileRepository: CardOnFileRepository { get }
 }
 
-final class TopupComponent: Component<TopupDependency> {
-
-    // TODO: Make sure to convert the variable into lower-camelcase.
-    fileprivate var topupBaseViewController: ViewControllable {
-        return dependency.topupBaseViewController
-    }
-
-    // TODO: Declare 'fileprivate' dependencies that are only used by this RIB.
+final class TopupComponent: Component<TopupDependency>, TopupInteractorDependency, AddPaymentMethodDependency {
+    var cardOnFileRepository: CardOnFileRepository { dependency.cardOnFileRepository }
+    fileprivate var topupBaseViewController: ViewControllable { return dependency.topupBaseViewController }
 }
 
 // MARK: - Builder
@@ -31,15 +27,22 @@ protocol TopupBuildable: Buildable {
 }
 
 final class TopupBuilder: Builder<TopupDependency>, TopupBuildable {
-
+    
     override init(dependency: TopupDependency) {
         super.init(dependency: dependency)
     }
-
+    
     func build(withListener listener: TopupListener) -> TopupRouting {
         let component = TopupComponent(dependency: dependency)
-        let interactor = TopupInteractor()
+        let interactor = TopupInteractor(dependency: component)
         interactor.listener = listener
-        return TopupRouter(interactor: interactor, viewController: component.topupBaseViewController)
+        
+        let addPaymenetMethodBuilder = AddPaymentMethodBuilder(dependency: component)
+        
+        return TopupRouter(
+            interactor: interactor,
+            viewController: component.topupBaseViewController,
+            addPaymentMethodBuildable: addPaymenetMethodBuilder
+        )
     }
 }

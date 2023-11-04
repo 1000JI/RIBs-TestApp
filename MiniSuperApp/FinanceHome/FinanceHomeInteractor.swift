@@ -5,6 +5,8 @@ protocol FinanceHomeRouting: ViewableRouting {
     func attachCardOnFileDashboard()
     func attachAddPaymentMethod()
     func detachAddPamyentMethod()
+    func attachTopup()
+    func detachTopup()
 }
 
 protocol FinanceHomePresentable: Presentable {
@@ -61,5 +63,17 @@ final class FinanceHomeInteractor: PresentableInteractor<FinanceHomePresentable>
     
     func addPaymentMethodDidAddCard(paymentMethod: PaymentMethod) {
         router?.detachAddPamyentMethod()
+    }
+    
+    // MARK: - SuperPayDashboardListener
+    
+    func superPayDashboardDidTapTopup() {
+        router?.attachTopup()
+    }
+    
+    // MARK: - TopupListener
+    
+    func topupDidClose() {
+        router?.detachTopup()
     }
 }

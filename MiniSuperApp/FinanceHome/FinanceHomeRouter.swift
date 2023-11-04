@@ -1,7 +1,7 @@
 import ModernRIBs
 
 /// listener에 등록하기 위해서 SuperPayDashboardListener를 상속 받도록 함
-protocol FinanceHomeInteractable: Interactable, SuperPayDashboardListener, CardOnFileDashboardListener, AddPaymentMethodListener {
+protocol FinanceHomeInteractable: Interactable, SuperPayDashboardListener, CardOnFileDashboardListener, AddPaymentMethodListener, TopupListener {
     var router: FinanceHomeRouting? { get set }
     var listener: FinanceHomeListener? { get set }
     var presentationDelegateProxy: AdaptivePresentationControllerDelegateProxy { get }
@@ -23,17 +23,22 @@ final class FinanceHomeRouter: ViewableRouter<FinanceHomeInteractable, FinanceHo
     private var addPaymentMethodRouting: Routing?
     private var addPaymentMethodBuildable: AddPaymentMethodBuildable
     
+    private var topupRouting: Routing?
+    private var topupBuildable: TopupBuildable
+    
     // 자식 빌더를 프로퍼티로 추가 후 생성자에도 추가를 해줌
     init(
         interactor: FinanceHomeInteractable,
         viewController: FinanceHomeViewControllable,
         superPayDashboardBuildable: SuperPayDashboardBuildable,
         cardOnFileDashboardBuildable: CardOnFileDashboardBuildable,
-        addPaymentMethodBuildable: AddPaymentMethodBuildable
+        addPaymentMethodBuildable: AddPaymentMethodBuildable,
+        topupBuildable: TopupBuildable
     ) {
         self.superPayDashboardBuildable = superPayDashboardBuildable
         self.cardOnFileDashboardBuildable = cardOnFileDashboardBuildable
         self.addPaymentMethodBuildable = addPaymentMethodBuildable
+        self.topupBuildable = topupBuildable
         super.init(interactor: interactor, viewController: viewController)
         interactor.router = self
     }
@@ -98,6 +103,25 @@ final class FinanceHomeRouter: ViewableRouter<FinanceHomeInteractable, FinanceHo
         
         detachChild(router)
         addPaymentMethodRouting = nil
+    }
+    
+    func attachTopup() {
+        if topupRouting != nil {
+            return
+        }
+        
+        let router = topupBuildable.build(withListener: interactor)
+        topupRouting = router
+        attachChild(router)
+    }
+    
+    func detachTopup() {
+        guard let router = topupRouting else {
+            return
+        }
+        
+        detachChild(router)
+        self.topupRouting = nil
     }
     
 }
