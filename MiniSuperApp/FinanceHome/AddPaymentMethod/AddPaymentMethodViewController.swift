@@ -68,7 +68,7 @@ final class AddPaymentMethodViewController: UIViewController, AddPaymentMethodPr
     private func setupViews() {
         title = "카드 추가"
         
-        setupNavigationItem(target: self, action: #selector(didTapClose))
+        setupNavigationItem(with: .close, target: self, action: #selector(didTapClose))
         
         view.backgroundColor = .white
         view.addSubview(cardNumberTextField)
