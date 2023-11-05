@@ -13,6 +13,7 @@ protocol TopupDependency: Dependency {
     /// Topup 리블렛이 소유하고 있는 뷰가 아니라 Topup 리블렛을 띄운 부모가 지정해준 뷰
     var topupBaseViewController: ViewControllable { get }
     var cardOnFileRepository: CardOnFileRepository { get }
+    var superPayRepository: SuperPayRepository { get }
 }
 
 final class TopupComponent:
@@ -21,6 +22,8 @@ final class TopupComponent:
     AddPaymentMethodDependency,
     EnterAmountDependency,
     CardOnFileDependency {
+    var superPayRepository: SuperPayRepository { dependency.superPayRepository }
+    
     var selectedPaymentMethod: ReadOnlyCurrentValuePublisher<PaymentMethod> { paymentMethodStream }
     
     var cardOnFileRepository: CardOnFileRepository { dependency.cardOnFileRepository }
