@@ -7,19 +7,19 @@ protocol FinanceHomeDependency: Dependency {
 
 final class FinanceHomeComponent: Component<FinanceHomeDependency>, SuperPayDashboardDependency, CardOnFileDashboardDependency, AddPaymentMethodDependency, TopupDependency {
     let cardOnFileRepository: CardOnFileRepository
-    var balance: ReadOnlyCurrentValuePublisher<Double> { balancePublisher }
+    let superPayRepository: SuperPayRepository
+    var balance: ReadOnlyCurrentValuePublisher<Double> { superPayRepository.balance }
     var topupBaseViewController: ViewControllable
-    private let balancePublisher: CurrentValuePublisher<Double>
     
     /// 자식 리블렛의 디펜던시를 충족시켜줘야 함
     init(
         dependency: FinanceHomeDependency,
-        balance: CurrentValuePublisher<Double>,
         cardOnFileRepository: CardOnFileRepository,
+        superPayRepository: SuperPayRepository,
         topupBaseViewController: ViewControllable
     ) {
-        self.balancePublisher = balance
         self.cardOnFileRepository = cardOnFileRepository
+        self.superPayRepository = superPayRepository
         self.topupBaseViewController = topupBaseViewController
         super.init(dependency: dependency)
     }
@@ -38,15 +38,13 @@ final class FinanceHomeBuilder: Builder<FinanceHomeDependency>, FinanceHomeBuild
     }
     
     func build(withListener listener: FinanceHomeListener) -> FinanceHomeRouting {
-        let balancePublisher = CurrentValuePublisher<Double>(10000)
-        
         let viewController = FinanceHomeViewController()
         
         // 리블렛이 필요한 객체들을 담는 바구니의 개념 && 자식 리블렛이 필요한 것들도 담는 바구니
         let component = FinanceHomeComponent(
             dependency: dependency,
-            balance: balancePublisher,
             cardOnFileRepository: CardOnFileRepositoryImp(),
+            superPayRepository: SuperPayRepositoryImp(),
             topupBaseViewController: viewController
         )
         
