@@ -122,11 +122,6 @@
 		5F7B99642AF62A2300724482 /* CardOnFileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CardOnFileViewController.swift; path = Samples/Topup/CardOnFileViewController.swift; sourceTree = SOURCE_ROOT; };
 		5F7B99672AF62A2B00724482 /* CardOnFileCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CardOnFileCell.swift; path = Samples/Topup/CardOnFileCell.swift; sourceTree = SOURCE_ROOT; };
 		5F7B99692AF7D89100724482 /* SuperPayRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperPayRepository.swift; sourceTree = "<group>"; };
-		5F7B996B2AF928EC00724482 /* CX */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = CX; path = ../AutoCrypt/CX; sourceTree = "<group>"; };
-		5F7B996C2AF9290400724482 /* Finance */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Finance; path = ../AutoCrypt/Finance; sourceTree = "<group>"; };
-		5F7B996D2AF9291400724482 /* Transport */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Transport; path = ../AutoCrypt/Transport; sourceTree = "<group>"; };
-		5F7B996E2AF9293200724482 /* Profile */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Profile; path = ../AutoCrypt/Profile; sourceTree = "<group>"; };
-		5F7B996F2AF9294500724482 /* Platform */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Platform; path = ../AutoCrypt/Platform; sourceTree = "<group>"; };
 		F57EBE512738468700FE9319 /* UIImage+Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Utils.swift"; sourceTree = "<group>"; };
 		F57EBE522738468700FE9319 /* Array+Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+Utils.swift"; sourceTree = "<group>"; };
 		F57EBE532738468700FE9319 /* UITableView+Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableView+Utils.swift"; sourceTree = "<group>"; };
@@ -351,11 +346,6 @@
 		F5829F4C26DB2BC400BFA8CD = {
 			isa = PBXGroup;
 			children = (
-				5F7B996F2AF9294500724482 /* Platform */,
-				5F7B996E2AF9293200724482 /* Profile */,
-				5F7B996D2AF9291400724482 /* Transport */,
-				5F7B996C2AF9290400724482 /* Finance */,
-				5F7B996B2AF928EC00724482 /* CX */,
 				F5829F5726DB2BC400BFA8CD /* MiniSuperApp */,
 				F5829F5626DB2BC400BFA8CD /* Products */,
 			);
