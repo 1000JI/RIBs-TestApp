@@ -1,25 +1,21 @@
 import ModernRIBs
 
 protocol FinanceHomeDependency: Dependency {
-    // TODO: Declare the set of dependencies required by this RIB, but cannot be
-    // created by this RIB.
+    var cardOnFileRepository: CardOnFileRepository { get }
+    var superPayRepository: SuperPayRepository { get }
 }
 
 final class FinanceHomeComponent: Component<FinanceHomeDependency>, SuperPayDashboardDependency, CardOnFileDashboardDependency, AddPaymentMethodDependency, TopupDependency {
-    let cardOnFileRepository: CardOnFileRepository
-    let superPayRepository: SuperPayRepository
+    var cardOnFileRepository: CardOnFileRepository { dependency.cardOnFileRepository }
+    var superPayRepository: SuperPayRepository { dependency.superPayRepository }
     var balance: ReadOnlyCurrentValuePublisher<Double> { superPayRepository.balance }
     var topupBaseViewController: ViewControllable
     
     /// 자식 리블렛의 디펜던시를 충족시켜줘야 함
     init(
         dependency: FinanceHomeDependency,
-        cardOnFileRepository: CardOnFileRepository,
-        superPayRepository: SuperPayRepository,
         topupBaseViewController: ViewControllable
     ) {
-        self.cardOnFileRepository = cardOnFileRepository
-        self.superPayRepository = superPayRepository
         self.topupBaseViewController = topupBaseViewController
         super.init(dependency: dependency)
     }
@@ -43,8 +39,6 @@ final class FinanceHomeBuilder: Builder<FinanceHomeDependency>, FinanceHomeBuild
         // 리블렛이 필요한 객체들을 담는 바구니의 개념 && 자식 리블렛이 필요한 것들도 담는 바구니
         let component = FinanceHomeComponent(
             dependency: dependency,
-            cardOnFileRepository: CardOnFileRepositoryImp(),
-            superPayRepository: SuperPayRepositoryImp(),
             topupBaseViewController: viewController
         )
         
