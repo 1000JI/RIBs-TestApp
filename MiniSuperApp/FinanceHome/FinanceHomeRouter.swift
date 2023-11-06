@@ -84,7 +84,7 @@ final class FinanceHomeRouter: ViewableRouter<FinanceHomeInteractable, FinanceHo
             return
         }
         
-        let router = addPaymentMethodBuildable.build(withListener: interactor)
+        let router = addPaymentMethodBuildable.build(withListener: interactor, closeButtonType: .close)
         let navigation = NavigationControllerable(root: router.viewControllable)
         navigation.navigationController.presentationController?.delegate = interactor.presentationDelegateProxy
         // viewControllable에서 프레젠트 하는 로직은 거의 모든 곳에서 사용되기 때문에 유틸 만듬!

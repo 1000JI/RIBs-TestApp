@@ -55,20 +55,21 @@ final class AddPaymentMethodViewController: UIViewController, AddPaymentMethodPr
         return button
     }()
     
-    init() {
+    init(closeButtonType: DismissButtonType) {
         super.init(nibName: nil, bundle: nil)
         
         setupViews()
+        setupNavigationItem(with: closeButtonType, target: self, action: #selector(didTapClose))
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: coder)
+        
+        setupNavigationItem(with: .close, target: self, action: #selector(didTapClose))
     }
     
     private func setupViews() {
         title = "카드 추가"
-        
-        setupNavigationItem(with: .close, target: self, action: #selector(didTapClose))
         
         view.backgroundColor = .white
         view.addSubview(cardNumberTextField)
