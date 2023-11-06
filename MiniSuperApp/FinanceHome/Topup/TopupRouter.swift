@@ -97,7 +97,16 @@ final class TopupRouter: Router<TopupInteractable>, TopupRouting {
         }
         
         let router = enterAmountBuildable.build(withListener: interactor)
-        presentInsideNavigation(router.viewControllable)
+        
+        if let navigation = navigationControllerable {
+            // 1. 처음부터 카드가 있는 경우 모달로 띄움
+            navigation.setViewControllers([router.viewControllable])
+            resetChildRouting()
+        } else {
+            // 2. 카드 추가 화면에서 온 경우에는 푸시로 이동
+            presentInsideNavigation(router.viewControllable)
+        }
+        
         attachChild(router)
         self.enterAmountRouting = router
     }
@@ -132,6 +141,22 @@ final class TopupRouter: Router<TopupInteractable>, TopupRouting {
         navigationControllerable?.popViewController(animated: true)
         detachChild(router)
         cardOnFileRouing = nil
+    }
+    
+    private func resetChildRouting() {
+        // 이미 있었던 View를 날렸기 때문에 router도 같이 삭제를 해줘야 함.
+        // Enter Amount가 푸시가 될 때 다시 Enter Amount 밖에 없는 깔끔한 상태로 시작을 하기 때문에,
+        // 다른 child들을 다 detach해주고 초기화 하는 작업
+        
+        if let cardOnFileRouing {
+            detachChild(cardOnFileRouing)
+            self.cardOnFileRouing = nil
+        }
+        
+        if let addPaymentMethodRouting {
+            detachChild(addPaymentMethodRouting)
+            self.addPaymentMethodRouting = nil
+        }
     }
 
     // MARK: - Private
