@@ -6,6 +6,7 @@
 //
 
 import ModernRIBs
+import FinanceRepository
 
 protocol CardOnFileDashboardDependency: Dependency {
     /// 부모에게 요청 할 것임!
