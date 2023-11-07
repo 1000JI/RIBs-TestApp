@@ -85,6 +85,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5F2D14392AFA60BD000939A7 /* CX */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CX; sourceTree = "<group>"; };
+		5F2D143A2AFA60F6000939A7 /* Finance */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Finance; sourceTree = "<group>"; };
+		5F2D143B2AFA610E000939A7 /* Transport */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Transport; sourceTree = "<group>"; };
+		5F2D143C2AFA611B000939A7 /* Profile */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Profile; sourceTree = "<group>"; };
+		5F2D143D2AFA6126000939A7 /* Platform */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Platform; sourceTree = "<group>"; };
 		5F7B99092AF381BF00724482 /* SuperPayDashboardRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SuperPayDashboardRouter.swift; path = MiniSuperApp/FinanceHome/SuperPayDashboard/SuperPayDashboardRouter.swift; sourceTree = SOURCE_ROOT; };
 		5F7B990A2AF381BF00724482 /* SuperPayDashboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SuperPayDashboardViewController.swift; path = MiniSuperApp/FinanceHome/SuperPayDashboard/SuperPayDashboardViewController.swift; sourceTree = SOURCE_ROOT; };
 		5F7B990B2AF381BF00724482 /* SuperPayDashboardBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SuperPayDashboardBuilder.swift; path = MiniSuperApp/FinanceHome/SuperPayDashboard/SuperPayDashboardBuilder.swift; sourceTree = SOURCE_ROOT; };
@@ -346,6 +351,11 @@
 		F5829F4C26DB2BC400BFA8CD = {
 			isa = PBXGroup;
 			children = (
+				5F2D143D2AFA6126000939A7 /* Platform */,
+				5F2D143C2AFA611B000939A7 /* Profile */,
+				5F2D143B2AFA610E000939A7 /* Transport */,
+				5F2D143A2AFA60F6000939A7 /* Finance */,
+				5F2D14392AFA60BD000939A7 /* CX */,
 				F5829F5726DB2BC400BFA8CD /* MiniSuperApp */,
 				F5829F5626DB2BC400BFA8CD /* Products */,
 			);
