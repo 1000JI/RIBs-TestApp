@@ -4,7 +4,7 @@ import AddPaymentMethod
 import CombineUtil
 import Topup
 
-protocol FinanceHomeDependency: Dependency {
+public protocol FinanceHomeDependency: Dependency {
     var cardOnFileRepository: CardOnFileRepository { get }
     var superPayRepository: SuperPayRepository { get }
 }
@@ -27,17 +27,17 @@ final class FinanceHomeComponent: Component<FinanceHomeDependency>, SuperPayDash
 
 // MARK: - Builder
 
-protocol FinanceHomeBuildable: Buildable {
-    func build(withListener listener: FinanceHomeListener) -> FinanceHomeRouting
+public protocol FinanceHomeBuildable: Buildable {
+    func build(withListener listener: FinanceHomeListener) -> ViewableRouting
 }
 
-final class FinanceHomeBuilder: Builder<FinanceHomeDependency>, FinanceHomeBuildable {
+public final class FinanceHomeBuilder: Builder<FinanceHomeDependency>, FinanceHomeBuildable {
     
-    override init(dependency: FinanceHomeDependency) {
+    public override init(dependency: FinanceHomeDependency) {
         super.init(dependency: dependency)
     }
     
-    func build(withListener listener: FinanceHomeListener) -> FinanceHomeRouting {
+    public func build(withListener listener: FinanceHomeListener) -> ViewableRouting {
         let viewController = FinanceHomeViewController()
         
         // 리블렛이 필요한 객체들을 담는 바구니의 개념 && 자식 리블렛이 필요한 것들도 담는 바구니
