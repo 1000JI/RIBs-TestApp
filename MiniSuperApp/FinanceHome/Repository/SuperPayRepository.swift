@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import CombineUtil
 
 protocol SuperPayRepository {
     /// 현재 잔액을 스트림 관리
