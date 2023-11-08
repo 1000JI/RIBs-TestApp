@@ -7,20 +7,19 @@ import Topup
 public protocol FinanceHomeDependency: Dependency {
     var cardOnFileRepository: CardOnFileRepository { get }
     var superPayRepository: SuperPayRepository { get }
+    var topupBuildable: TopupBuildable { get }
 }
 
-final class FinanceHomeComponent: Component<FinanceHomeDependency>, SuperPayDashboardDependency, CardOnFileDashboardDependency, AddPaymentMethodDependency, TopupDependency {
+final class FinanceHomeComponent: Component<FinanceHomeDependency>, SuperPayDashboardDependency, CardOnFileDashboardDependency, AddPaymentMethodDependency {
     var cardOnFileRepository: CardOnFileRepository { dependency.cardOnFileRepository }
     var superPayRepository: SuperPayRepository { dependency.superPayRepository }
     var balance: ReadOnlyCurrentValuePublisher<Double> { superPayRepository.balance }
-    var topupBaseViewController: ViewControllable
+    var topupBuildable: TopupBuildable { dependency.topupBuildable }
     
     /// 자식 리블렛의 디펜던시를 충족시켜줘야 함
-    init(
-        dependency: FinanceHomeDependency,
-        topupBaseViewController: ViewControllable
+    override init(
+        dependency: FinanceHomeDependency
     ) {
-        self.topupBaseViewController = topupBaseViewController
         super.init(dependency: dependency)
     }
 }
@@ -42,8 +41,7 @@ public final class FinanceHomeBuilder: Builder<FinanceHomeDependency>, FinanceHo
         
         // 리블렛이 필요한 객체들을 담는 바구니의 개념 && 자식 리블렛이 필요한 것들도 담는 바구니
         let component = FinanceHomeComponent(
-            dependency: dependency,
-            topupBaseViewController: viewController
+            dependency: dependency
         )
         
         let interactor = FinanceHomeInteractor(presenter: viewController)
@@ -53,7 +51,6 @@ public final class FinanceHomeBuilder: Builder<FinanceHomeDependency>, FinanceHo
         let superPayDashboardBuilder = SuperPayDashboardBuilder(dependency: component)
         let cardOnFileDashboardBuilder = CardOnFileDashboardBuilder(dependency: component)
         let addPaymentMethodBuilder = AddPaymentMethodBuilder(dependency: component)
-        let topupBuilder = TopupBuilder(dependency: component)
         
         return FinanceHomeRouter(
             interactor: interactor,
@@ -61,7 +58,7 @@ public final class FinanceHomeBuilder: Builder<FinanceHomeDependency>, FinanceHo
             superPayDashboardBuildable: superPayDashboardBuilder,
             cardOnFileDashboardBuildable: cardOnFileDashboardBuilder,
             addPaymentMethodBuildable: addPaymentMethodBuilder,
-            topupBuildable: topupBuilder
+            topupBuildable: component.topupBuildable
         )
     }
 }

@@ -78,5 +78,15 @@ public extension ViewControllable {
             self.uiviewController.navigationController?.setViewControllers(viewControllerables.map(\.uiviewController), animated: true)
         }
     }
+    
+    var topViewController: ViewControllable {
+        var top: ViewControllable = self
+        
+        while let presented = top.uiviewController.presentedViewController as? ViewControllable {
+            top = presented
+        }
+        
+        return top
+    }
 }
 

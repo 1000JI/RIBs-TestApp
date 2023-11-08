@@ -18,7 +18,8 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/DevYeom/ModernRIBs.git", exact: "1.0.2"),
-        .package(path: "../Finance")
+        .package(path: "../Finance"),
+        .package(path: "../Platform")
     ],
     targets: [
         .target(
@@ -33,7 +34,8 @@ let package = Package(
                 "ModernRIBs",
                 "TransportHome",
                 .product(name: "FinanceRepository", package: "Finance"),
-                .product(name: "Topup", package: "Finance")
+                .product(name: "Topup", package: "Finance"),
+                .product(name: "SuperUI", package: "Platform")
             ],
             resources: [
                 .process("Resources"), // 리소스 같은 경우 여기서 선언!!! :)
