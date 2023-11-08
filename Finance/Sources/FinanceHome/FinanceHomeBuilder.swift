@@ -8,13 +8,15 @@ public protocol FinanceHomeDependency: Dependency {
     var cardOnFileRepository: CardOnFileRepository { get }
     var superPayRepository: SuperPayRepository { get }
     var topupBuildable: TopupBuildable { get }
+    var addPaymentMethodBuildable: AddPaymentMethodBuildable { get }
 }
 
-final class FinanceHomeComponent: Component<FinanceHomeDependency>, SuperPayDashboardDependency, CardOnFileDashboardDependency, AddPaymentMethodDependency {
+final class FinanceHomeComponent: Component<FinanceHomeDependency>, SuperPayDashboardDependency, CardOnFileDashboardDependency {
     var cardOnFileRepository: CardOnFileRepository { dependency.cardOnFileRepository }
     var superPayRepository: SuperPayRepository { dependency.superPayRepository }
     var balance: ReadOnlyCurrentValuePublisher<Double> { superPayRepository.balance }
     var topupBuildable: TopupBuildable { dependency.topupBuildable }
+    var addPaymentBuildable: AddPaymentMethodBuildable { dependency.addPaymentMethodBuildable }
     
     /// 자식 리블렛의 디펜던시를 충족시켜줘야 함
     override init(
@@ -50,14 +52,13 @@ public final class FinanceHomeBuilder: Builder<FinanceHomeDependency>, FinanceHo
         // 자식 리블렛 생성 및 디펜더시 추가
         let superPayDashboardBuilder = SuperPayDashboardBuilder(dependency: component)
         let cardOnFileDashboardBuilder = CardOnFileDashboardBuilder(dependency: component)
-        let addPaymentMethodBuilder = AddPaymentMethodBuilder(dependency: component)
         
         return FinanceHomeRouter(
             interactor: interactor,
             viewController: viewController,
             superPayDashboardBuildable: superPayDashboardBuilder,
             cardOnFileDashboardBuildable: cardOnFileDashboardBuilder,
-            addPaymentMethodBuildable: addPaymentMethodBuilder,
+            addPaymentMethodBuildable: component.addPaymentBuildable,
             topupBuildable: component.topupBuildable
         )
     }

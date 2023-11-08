@@ -15,8 +15,10 @@ import TransportHome
 import TransportHomeImp
 import Topup
 import TopupImp
+import AddPaymentMethod
+import AddPaymentMethodImp
 
-final class AppRootComponent: Component<AppRootDependency>, AppHomeDependency, FinanceHomeDependency, ProfileHomeDependency, TransportHomeDependency, TopupDependency {
+final class AppRootComponent: Component<AppRootDependency>, AppHomeDependency, FinanceHomeDependency, ProfileHomeDependency, TransportHomeDependency, TopupDependency, AddPaymentMethodDependency {
     var cardOnFileRepository: CardOnFileRepository
     var superPayRepository: SuperPayRepository
     
@@ -27,6 +29,10 @@ final class AppRootComponent: Component<AppRootDependency>, AppHomeDependency, F
     
     lazy var topupBuildable: TopupBuildable = {
         return TopupBuilder(dependency: self)
+    }()
+    
+    lazy var addPaymentMethodBuildable: AddPaymentMethodBuildable = {
+        return AddPaymentMethodBuilder(dependency: self)
     }()
     
     /// 동적으로 가장 위에 있는, 현재 앱에서 가장 위에 있는 뷰컨트롤러를 지정하면 됨
