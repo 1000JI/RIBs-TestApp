@@ -16,8 +16,12 @@ final class TransportHomeViewController: UIViewController, TransportHomePresenta
         imageView.contentMode = .scaleAspectFill
         
         // TODO: 이미지 불러오려면 이런식으로 해야됨!!!
-        let image = Bundle.module.path(forResource: "map_seoul", ofType: "png")!
-        imageView.image = UIImage(named: image)
+//        let image = Bundle.module.path(forResource: "map_seoul", ofType: "png")!
+//        imageView.image = UIImage(named: image)
+        
+        // 또는
+        
+        imageView.image = UIImage(named: "map_seoul", in: .module, with: nil)
         return imageView
     }()
     

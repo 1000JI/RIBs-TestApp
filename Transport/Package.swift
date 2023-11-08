@@ -11,6 +11,10 @@ let package = Package(
             name: "TransportHome",
             targets: ["TransportHome"]
         ),
+        .library(
+            name: "TransportHomeImp",
+            targets: ["TransportHomeImp"]
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/DevYeom/ModernRIBs.git", exact: "1.0.2"),
@@ -21,6 +25,13 @@ let package = Package(
             name: "TransportHome",
             dependencies: [
                 "ModernRIBs",
+            ]
+        ),
+        .target(
+            name: "TransportHomeImp",
+            dependencies: [
+                "ModernRIBs",
+                "TransportHome",
                 .product(name: "FinanceRepository", package: "Finance"),
                 .product(name: "Topup", package: "Finance")
             ],
