@@ -10,6 +10,7 @@ import Combine
 import FinanceEntity
 import FinanceRepository
 import AddPaymentMethod
+import Foundation
 
 protocol AddPaymentMethodRouting: ViewableRouting {
     // TODO: Declare methods the interactor can invoke to manage sub-tree via the router.
@@ -24,10 +25,10 @@ protocol AddPaymentMethodInteractorDependency {
 }
 
 final class AddPaymentMethodInteractor: PresentableInteractor<AddPaymentMethodPresentable>, AddPaymentMethodInteractable, AddPaymentMethodPresentableListener {
-
+    
     weak var router: AddPaymentMethodRouting?
     weak var listener: AddPaymentMethodListener?
-
+    
     private let dependency: AddPaymentMethodInteractorDependency
     
     private var cancellabels: Set<AnyCancellable>
@@ -41,12 +42,12 @@ final class AddPaymentMethodInteractor: PresentableInteractor<AddPaymentMethodPr
         super.init(presenter: presenter)
         presenter.listener = self
     }
-
+    
     override func didBecomeActive() {
         super.didBecomeActive()
         // TODO: Implement business logic here.
     }
-
+    
     override func willResignActive() {
         super.willResignActive()
         // TODO: Pause any business logic.
@@ -63,7 +64,9 @@ final class AddPaymentMethodInteractor: PresentableInteractor<AddPaymentMethodPr
                 cvc: cvc,
                 expiration: expiry
             )
-        ).sink(
+        )
+        .receive(on: DispatchQueue.main)
+        .sink(
             receiveCompletion: { _ in },
             receiveValue: { [weak self] method in
                 // 콜이 성공하면 addPaymentMethod 할일을 완료한 것이며, 리스너인 부모리블렛에게 결과를 알려주면 됨
