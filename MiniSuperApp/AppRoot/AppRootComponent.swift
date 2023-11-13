@@ -17,6 +17,8 @@ import Topup
 import TopupImp
 import AddPaymentMethod
 import AddPaymentMethodImp
+import Network
+import NetworkImp
 
 final class AppRootComponent: Component<AppRootDependency>, AppHomeDependency, FinanceHomeDependency, ProfileHomeDependency, TransportHomeDependency, TopupDependency, AddPaymentMethodDependency {
     var cardOnFileRepository: CardOnFileRepository
@@ -42,12 +44,25 @@ final class AppRootComponent: Component<AppRootDependency>, AppHomeDependency, F
     
     init(
         dependency: AppRootDependency,
-        cardOnFileRepository: CardOnFileRepository,
-        superPayRepository: SuperPayRepository,
         rootViewController: ViewControllable
     ) {
-        self.cardOnFileRepository = cardOnFileRepository
-        self.superPayRepository = superPayRepository
+        /*
+         URL Session에서 Http 결과 값을 우리가 원하는 데이터로 교체해 볼 수 있음.
+         Custom URLSession
+         */
+        
+        let config = URLSessionConfiguration.ephemeral
+        config.protocolClasses = [SuperAppURLProtocol.self]
+        
+        setupURLProtocol()
+        
+        let network = NetworkImp(session: URLSession(configuration: config))
+        
+        self.cardOnFileRepository = CardOnFileRepositoryImp()
+        self.superPayRepository = SuperPayRepositoryImp(
+            network: network,
+            baseURL: BaseURL().financeBaseURL
+        )
         self.rootViewController = rootViewController
         super.init(dependency: dependency)
     }
