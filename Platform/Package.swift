@@ -19,6 +19,21 @@ let package = Package(
             name: "SuperUI",
             targets: ["SuperUI"]
         ),
+        
+        .library(
+            name: "DefaultsStore",
+            targets: ["DefaultsStore"]
+        ),
+        
+        .library(
+            name: "Network",
+            targets: ["Network"]
+        ),
+        
+        .library(
+            name: "NetworkImp",
+            targets: ["NetworkImp"]
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/CombineCommunity/CombineExt", exact: "1.8.1"),
@@ -41,6 +56,22 @@ let package = Package(
             name: "SuperUI",
             dependencies: [
                 "RIBsUtil"
+            ]
+        ),
+        .target(
+            name: "DefaultsStore",
+            dependencies: [
+            ]
+        ),
+        .target(
+            name: "Network",
+            dependencies: [
+            ]
+        ),
+        .target(
+            name: "NetworkImp",
+            dependencies: [
+                "Network"
             ]
         ),
     ]
