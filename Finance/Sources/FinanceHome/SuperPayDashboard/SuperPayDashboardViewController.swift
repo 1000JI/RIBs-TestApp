@@ -38,6 +38,7 @@ final class SuperPayDashboardViewController: UIViewController, SuperPayDashboard
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("충전하기", for: .normal)
         button.setTitleColor(.systemBlue, for: .normal)
+        button.accessibilityIdentifier = "superpay_dashboard_topup_button"
         button.addTarget(self, action: #selector(topupButtonDidTap), for: .touchUpInside)
         return button
     }()
@@ -65,6 +66,7 @@ final class SuperPayDashboardViewController: UIViewController, SuperPayDashboard
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 22, weight: .semibold)
         label.textColor = .white
+        label.accessibilityIdentifier = "superpay_dashboard_balance_label"
         return label
     }()
     

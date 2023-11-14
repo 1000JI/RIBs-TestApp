@@ -52,11 +52,13 @@ final class AppRootComponent: Component<AppRootDependency>, AppHomeDependency, F
          URL Session에서 Http 결과 값을 우리가 원하는 데이터로 교체해 볼 수 있음.
          Custom URLSession
          */
-        
+        #if UITESTING
+        let config = URLSessionConfiguration.default
+        #else
         let config = URLSessionConfiguration.ephemeral
         config.protocolClasses = [SuperAppURLProtocol.self]
-        
         setupURLProtocol()
+        #endif
         
         let network = NetworkImp(session: URLSession(configuration: config))
         
