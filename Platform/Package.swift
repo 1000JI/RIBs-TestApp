@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "Platform",
-    platforms: [.iOS(.v14)],
+    platforms: [.iOS(.v13)],
     products: [
         .library(
             name: "CombineUtil",
@@ -20,10 +20,13 @@ let package = Package(
             targets: ["RIBsTestSupport"]
         ),
         .library(
+            name: "PlatformTestSupport",
+            targets: ["PlatformTestSupport"]
+        ),
+        .library(
             name: "SuperUI",
             targets: ["SuperUI"]
         ),
-        
         .library(
             name: "DefaultsStore",
             targets: ["DefaultsStore"]
@@ -42,7 +45,8 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/CombineCommunity/CombineExt", exact: "1.8.1"),
         .package(url: "https://github.com/DevYeom/ModernRIBs.git", exact: "1.0.2"),
-        .package(url: "https://github.com/pointfreeco/combine-schedulers", exact: "1.0.0")
+        .package(url: "https://github.com/pointfreeco/combine-schedulers", exact: "1.0.0"),
+        .package(url: "https://github.com/pointfreeco/swift-snapshot-testing", exact: "1.14.2")
     ],
     targets: [
         .target(
@@ -62,6 +66,12 @@ let package = Package(
             name: "RIBsTestSupport",
             dependencies: [
                 "ModernRIBs"
+            ]
+        ),
+        .target(
+            name: "PlatformTestSupport",
+            dependencies: [
+                .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
             ]
         ),
         .target(
