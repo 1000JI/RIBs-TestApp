@@ -10,6 +10,7 @@ import CombineUtil
 import FinanceEntity
 import FinanceRepository
 import FinanceRepositoryTestSupport
+import CombineSchedulers
 @testable import TopupImp
 
 /*
@@ -43,6 +44,8 @@ final class EnterAmountPresentableMock: EnterAmountPresentable {
 }
 
 final class EnterAmountDependencyMock: EnterAmountInteractorDependency {
+    var mainQueue: AnySchedulerOf<DispatchQueue> { .immediate }
+    
     /// 스트림을 통해 값을 주입해주고 테스트
     var selectedPaymentMethodSubject = CurrentValuePublisher<PaymentMethod>(
         PaymentMethod(

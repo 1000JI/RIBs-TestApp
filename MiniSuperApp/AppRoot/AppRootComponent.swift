@@ -19,10 +19,12 @@ import AddPaymentMethod
 import AddPaymentMethodImp
 import Network
 import NetworkImp
+import CombineSchedulers
 
 final class AppRootComponent: Component<AppRootDependency>, AppHomeDependency, FinanceHomeDependency, ProfileHomeDependency, TransportHomeDependency, TopupDependency, AddPaymentMethodDependency {
     var cardOnFileRepository: CardOnFileRepository
     var superPayRepository: SuperPayRepository
+    var mainQueue: AnySchedulerOf<DispatchQueue> { .main }
     
     /// 언젠가 모듈이 빌드가 되어야 하는 곳이 여기! 앱델리게이트와 가장 가까운 앱 최상단!
     lazy var transportHomeBuildable: TransportHomeBuildable = {

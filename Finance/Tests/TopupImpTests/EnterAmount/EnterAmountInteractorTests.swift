@@ -8,6 +8,7 @@
 @testable import TopupImp
 import XCTest
 import FinanceEntity
+import FinanceRepositoryTestSupport
 
 final class EnterAmountInteractorTests: XCTestCase {
     
@@ -16,6 +17,10 @@ final class EnterAmountInteractorTests: XCTestCase {
     private var presenter: EnterAmountPresentableMock!
     private var dependency: EnterAmountDependencyMock!
     private var listener: EnterAmountListenerMock!
+    
+    private var repository: SuperPayRepositoryMock! {
+        dependency.superPayRepository as? SuperPayRepositoryMock
+    }
     
     // TODO: declare other objects and mocks you need as private vars
     
@@ -62,5 +67,44 @@ final class EnterAmountInteractorTests: XCTestCase {
         XCTAssertEqual(presenter.updateSelectedPaymentMethodCallCount, 1)
         XCTAssertEqual(presenter.updateSelectedPaymentMethodViewModel?.name, "name_0 9999")
         XCTAssertNotEqual(presenter.updateSelectedPaymentMethodViewModel?.image, nil)
+    }
+    
+    func testTopupWithValidAmount() {
+        // given
+        let paymentMethod = PaymentMethod(
+            id: "id_0",
+            name: "name_0",
+            digits: "9999",
+            color: "#13ABE8FF",
+            isPrimary: false
+        )
+        dependency.selectedPaymentMethodSubject.send(paymentMethod)
+        
+        // when
+        sut.didTapTopup(with: 1_000_000)
+        
+        // then
+        // 비동기로 동작하고 있기 때문에 wait 없이 동작하면 실패가 뜸
+        // 1-1. 웨이팅 주는 방법
+//        _ = XCTWaiter.wait(for: [expectation(description: "Wait 0.1 second")], timeout: 0.1)
+        
+        // 1-2. 쓰레드 변경
+//         .receive(on: DispatchQueue.main) -> .receive(on: ImmediateScheduler.shared)
+        
+        // 1-3. 유용한 라이브러리 사용 -> https://github.com/pointfreeco/combine-schedulers
+        
+        // 1. Presenter의 StartLoading & StopLoading이 잘 불리는지 확인
+        // 로딩을 띄우고 내리는 게 쌍으로 잘 이루어지는지 확인하는 게 굉장히 중요한 테스트
+        XCTAssertEqual(presenter.startLoadingCallCount, 1)
+        XCTAssertEqual(presenter.stopLoadingCallCount, 1)
+        
+        // 2. Repository의 값을 제대로 Amount와 PaymentMethod 아이디를 잘 주는지 확인
+        XCTAssertEqual(repository.topupCallCount, 1)
+        XCTAssertEqual(repository.paymentMethodID, "id_0")
+        XCTAssertEqual(repository.topupAmount, 1_000_000)
+        
+        // 3. 충전이 성공하고 나면 리스너의 콜백을 잘 주는지 확인
+        XCTAssertEqual(listener.enterAmountDidFinishTopupCallCount, 1)
+        
     }
 }

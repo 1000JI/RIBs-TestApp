@@ -11,6 +11,8 @@ import AddPaymentMethod
 import CombineUtil
 import FinanceEntity
 import Topup
+import CombineSchedulers
+import Foundation
 
 /// Topup 리블렛이 동작하기 위해 필요한 것들을 선언해두는 곳
 /// 부모 리블렛이 뷰 컨트롤러를 하나 지정해줘야 함
@@ -20,18 +22,14 @@ public protocol TopupDependency: Dependency {
     var cardOnFileRepository: CardOnFileRepository { get }
     var superPayRepository: SuperPayRepository { get }
     var addPaymentMethodBuildable: AddPaymentMethodBuildable { get }
+    var mainQueue: AnySchedulerOf<DispatchQueue> { get }
 }
 
-final class TopupComponent:
-    Component<TopupDependency>,
-    TopupInteractorDependency,
-    EnterAmountDependency,
-    CardOnFileDependency {
+final class TopupComponent: Component<TopupDependency>, TopupInteractorDependency, EnterAmountDependency, CardOnFileDependency {
     var superPayRepository: SuperPayRepository { dependency.superPayRepository }
-    
     var selectedPaymentMethod: ReadOnlyCurrentValuePublisher<PaymentMethod> { paymentMethodStream }
-    
     var cardOnFileRepository: CardOnFileRepository { dependency.cardOnFileRepository }
+    var mainQueue: AnySchedulerOf<DispatchQueue> { dependency.mainQueue }
     fileprivate var topupBaseViewController: ViewControllable { return dependency.topupBaseViewController }
     
     let paymentMethodStream: CurrentValuePublisher<PaymentMethod>
