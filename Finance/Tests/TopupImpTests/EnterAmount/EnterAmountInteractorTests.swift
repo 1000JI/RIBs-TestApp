@@ -105,6 +105,28 @@ final class EnterAmountInteractorTests: XCTestCase {
         
         // 3. 충전이 성공하고 나면 리스너의 콜백을 잘 주는지 확인
         XCTAssertEqual(listener.enterAmountDidFinishTopupCallCount, 1)
-        
     }
+    
+    func testTopupWithFailure() {
+        // given
+        let paymentMethod = PaymentMethod(
+            id: "id_0",
+            name: "name_0",
+            digits: "9999",
+            color: "#13ABE8FF",
+            isPrimary: false
+        )
+        dependency.selectedPaymentMethodSubject.send(paymentMethod)
+        repository.shouldTopupSucceed = false
+        
+        // when
+        sut.didTapTopup(with: 1_000_000)
+        
+        // then
+        XCTAssertEqual(presenter.startLoadingCallCount, 1)
+        XCTAssertEqual(presenter.stopLoadingCallCount, 1)
+        // 실패했을 경우에는 카운트가 증가하면 안됨
+        XCTAssertEqual(listener.enterAmountDidFinishTopupCallCount, 0)
+    }
+    
 }
