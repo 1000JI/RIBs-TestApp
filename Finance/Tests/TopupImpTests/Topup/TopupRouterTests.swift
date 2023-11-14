@@ -7,6 +7,7 @@
 
 @testable import TopupImp
 import XCTest
+import ModernRIBs
 import RIBsTestSupport
 import AddPaymentMethodTestSupport
 
@@ -39,5 +40,63 @@ final class TopupRouterTests: XCTestCase {
     }
     
     // MARK: - Tests
+    
+    func testAttachAddPaymentMethod() {
+        // given
+        
+        // when
+        sut.attachAddPaymentMethod(closeButtonType: .close)
+        
+        // then
+        XCTAssertEqual(addPaymentMethodBuildable.buildCallCount, 1)
+        XCTAssertEqual(addPaymentMethodBuildable.closeButtonType, .close)
+        XCTAssertEqual(viewController.presentCallCount, 1)
+    }
+    
+    /// Attach Add Payment Method Testing
+    func testAttachEnterAmount() {
+        // given
+        let router = EnterAmountRoutingMock(
+            interactable: Interactor(),
+            viewControllable: ViewControllableMock()
+        )
+        
+        var assignedListener: EnterAmountListener?
+        enterAmountBuildable.buildHandler = { listener in
+            assignedListener = listener
+            return router
+        }
+        
+        // when
+        sut.attachEnterAmount()
+        
+        // then
+        XCTAssertTrue(assignedListener === interactor)
+        XCTAssertEqual(enterAmountBuildable.buildCallCount, 1)
+    }
+    
+    func testAttachEnterAmountOnNavigation() {
+        // given
+        let router = EnterAmountRoutingMock(
+            interactable: Interactor(),
+            viewControllable: ViewControllableMock()
+        )
+        
+        var assignedListener: EnterAmountListener?
+        enterAmountBuildable.buildHandler = { listener in
+            assignedListener = listener
+            return router
+        }
+        
+        // when
+        sut.attachAddPaymentMethod(closeButtonType: .close)
+        sut.attachEnterAmount()
+        
+        // then
+        XCTAssertTrue(assignedListener === interactor)
+        XCTAssertEqual(enterAmountBuildable.buildCallCount, 1)
+        XCTAssertEqual(viewController.presentCallCount, 1)
+        XCTAssertEqual(sut.children.count, 1)
+    }
     
 }
