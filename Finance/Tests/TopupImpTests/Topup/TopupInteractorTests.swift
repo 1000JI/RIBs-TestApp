@@ -72,4 +72,145 @@ final class TopupInteractorTests: XCTestCase {
         XCTAssertEqual(router.attachAddPaymentMethodCloseButtonType, .close)
     }
     
+    func testDidAddCardWithCard() {
+        // given
+        let cards = [
+            PaymentMethod(
+                id: "0",
+                name: "Zero",
+                digits: "0123",
+                color: "",
+                isPrimary: false
+            )
+        ]
+        cardOnFileRepository.cardOnFileSuject.send(cards)
+        
+        let newCard = PaymentMethod(
+            id: "new_card_id",
+            name: "New Card",
+            digits: "0000",
+            color: "",
+            isPrimary: false
+        )
+        
+        // then
+        sut.activate()
+        sut.addPaymentMethodDidAddCard(paymentMethod: newCard)
+        
+        // then
+        XCTAssertEqual(router.popToRootCallCount, 1)
+        XCTAssertEqual(dependency.paymentMethodStream.value.id, "new_card_id")
+    }
+    
+    func testDidAddCardWithoutCard() {
+        // given
+        cardOnFileRepository.cardOnFileSuject.send([])
+        
+        let newCard = PaymentMethod(
+            id: "new_card_id",
+            name: "New Card",
+            digits: "0000",
+            color: "",
+            isPrimary: false
+        )
+        
+        // then
+        sut.activate()
+        sut.addPaymentMethodDidAddCard(paymentMethod: newCard)
+        
+        // then
+        XCTAssertEqual(router.attachEnterAmountCallCount, 1)
+        XCTAssertEqual(dependency.paymentMethodStream.value.id, "new_card_id")
+    }
+    
+    func testAddPaymentMethodDidTapCloseFromEnterAmount() {
+        // given
+        let cards = [
+            PaymentMethod(
+                id: "0",
+                name: "Zero",
+                digits: "0123",
+                color: "",
+                isPrimary: false
+            )
+        ]
+        cardOnFileRepository.cardOnFileSuject.send(cards)
+        
+        // when
+        sut.activate()
+        sut.addPaymentMethodDidTapClose()
+        
+        // then
+        XCTAssertEqual(router.detachAddPaymentMethodCallCount, 1)
+    }
+    
+    func testAddPaymentMethodDidTapClose() {
+        // given
+        cardOnFileRepository.cardOnFileSuject.send([])
+        
+        // when
+        sut.activate()
+        sut.addPaymentMethodDidTapClose()
+        
+        // then
+        XCTAssertEqual(router.detachAddPaymentMethodCallCount, 1)
+        XCTAssertEqual(listener.topupDidCloseCallCount, 1)
+    }
+    
+    func testDidSelectCard() {
+        // given
+        let cards = [
+            PaymentMethod(
+                id: "0",
+                name: "Zero",
+                digits: "0123",
+                color: "",
+                isPrimary: false
+            ),
+            PaymentMethod(
+                id: "1",
+                name: "One",
+                digits: "1234",
+                color: "",
+                isPrimary: false
+            )
+        ]
+        cardOnFileRepository.cardOnFileSuject.send(cards)
+        
+        // when
+        sut.cardOnFileDidSelect(at: 0)
+        
+        // then
+        XCTAssertEqual(dependency.paymentMethodStream.value.id, "0")
+        XCTAssertEqual(router.detachCardOnFileCallCount, 1)
+    }
+    
+    func testDidSelectCardWithInvalidIndex() {
+        // given
+        let cards = [
+            PaymentMethod(
+                id: "0",
+                name: "Zero",
+                digits: "0123",
+                color: "",
+                isPrimary: false
+            ),
+            PaymentMethod(
+                id: "1",
+                name: "One",
+                digits: "1234",
+                color: "",
+                isPrimary: false
+            )
+        ]
+        cardOnFileRepository.cardOnFileSuject.send(cards)
+        
+        // when
+        sut.cardOnFileDidSelect(at: 2)
+        
+        // then
+        XCTAssertEqual(dependency.paymentMethodStream.value.id, "")
+        XCTAssertEqual(router.detachCardOnFileCallCount, 1)
+    }
+    
 }
