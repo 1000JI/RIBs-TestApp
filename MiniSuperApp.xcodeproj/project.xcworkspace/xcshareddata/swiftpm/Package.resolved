@@ -19,6 +19,15 @@
       }
     },
     {
+      "identity" : "hammer",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/lyft/Hammer",
+      "state" : {
+        "revision" : "d560b57f6ab8a6ebe662c26f56e01b40fee25cfb",
+        "version" : "0.14.3"
+      }
+    },
+    {
       "identity" : "modernribs",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/DevYeom/ModernRIBs",
